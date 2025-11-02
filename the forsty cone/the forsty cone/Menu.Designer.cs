@@ -32,7 +32,7 @@
             listView1 = new ListView();
             imageList1 = new ImageList(components);
             btn_add = new Button();
-            btn_remove = new Button();
+            btn_close = new Button();
             SuspendLayout();
             // 
             // listView1
@@ -52,30 +52,30 @@
             // 
             // btn_add
             // 
-            btn_add.Location = new Point(121, 574);
+            btn_add.Location = new Point(56, 546);
             btn_add.Name = "btn_add";
-            btn_add.Size = new Size(58, 23);
+            btn_add.Size = new Size(133, 45);
             btn_add.TabIndex = 2;
-            btn_add.Text = "add";
+            btn_add.Text = "add to basket";
             btn_add.UseVisualStyleBackColor = true;
             btn_add.Click += btn_add_Click;
             // 
-            // btn_remove
+            // btn_close
             // 
-            btn_remove.Location = new Point(220, 574);
-            btn_remove.Name = "btn_remove";
-            btn_remove.Size = new Size(75, 23);
-            btn_remove.TabIndex = 3;
-            btn_remove.Text = "Remove";
-            btn_remove.UseVisualStyleBackColor = true;
-            btn_remove.Click += btn_remove_Click;
+            btn_close.Location = new Point(530, 12);
+            btn_close.Name = "btn_close";
+            btn_close.Size = new Size(61, 48);
+            btn_close.TabIndex = 10;
+            btn_close.Text = "Logout";
+            btn_close.UseVisualStyleBackColor = true;
+            btn_close.Click += btn_close_Click;
             // 
             // Menu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(529, 631);
-            Controls.Add(btn_remove);
+            ClientSize = new Size(616, 659);
+            Controls.Add(btn_close);
             Controls.Add(btn_add);
             Controls.Add(listView1);
             Name = "Menu";
@@ -91,6 +91,6 @@
         private Button btn_deleteitem;
         private Button btn_add;
         private Button btn_edit;
-        private Button btn_remove;
+        private Button btn_close;
     }
 }

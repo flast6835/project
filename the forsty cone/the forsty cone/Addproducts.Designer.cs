@@ -36,6 +36,7 @@
             label4 = new Label();
             tbx_productimage = new TextBox();
             pictureBox1 = new PictureBox();
+            btn_close = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -117,12 +118,23 @@
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
             // 
+            // btn_close
+            // 
+            btn_close.Location = new Point(235, 36);
+            btn_close.Name = "btn_close";
+            btn_close.Size = new Size(61, 48);
+            btn_close.TabIndex = 9;
+            btn_close.Text = "Logout";
+            btn_close.UseVisualStyleBackColor = true;
+            btn_close.Click += btn_close_Click;
+            // 
             // Addproducts
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(873, 512);
+            Controls.Add(btn_close);
             Controls.Add(label4);
             Controls.Add(tbx_productimage);
             Controls.Add(tbx_productprice);
@@ -147,5 +159,6 @@
         private Label label4;
         private TextBox tbx_productimage;
         private PictureBox pictureBox1;
+        private Button btn_close;
     }
 }

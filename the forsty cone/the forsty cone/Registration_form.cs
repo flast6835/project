@@ -47,17 +47,18 @@ namespace the_forsty_cone
 
         private void btn_register_Click(object sender, EventArgs e)
         {
-            Users u1 = new Users();
-           
 
+            Users u1 = new Users(); //creating user object to assign user inputs to properties
+
+            //validations checking if any fields are empty
             if (string.IsNullOrWhiteSpace(tbox_username.Text) == true && string.IsNullOrWhiteSpace(tbox_password.Text) &&
                 string.IsNullOrWhiteSpace(tbox_confirmpassword.Text) && string.IsNullOrWhiteSpace(tbox_email.Text))
             {
                 MessageBox.Show("Please fill in all fields.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            //check if any fields are empty
-            if (tbox_password.Text != tbox_confirmpassword.Text)
+            //validate if any fields are empty
+            if (tbox_password.Text != tbox_confirmpassword.Text) 
             {
 
                 MessageBox.Show("Passwords do not match.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -67,17 +68,19 @@ namespace the_forsty_cone
             if (tbox_email.Text.Contains("@") == false || tbox_email.Text.Contains(".") == false)
             {
                 MessageBox.Show("Email requires @ and .", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-               
-                
-                return; 
+
+
+                return;
             }
+            //checking if date of birth is in correct format
             if (u1.Checkdt(tbox_DOB.Text) == false)
             {
                 MessageBox.Show("Date of Birth must be in DD-MM-YYYY format.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            
+
+
             u1.username = tbox_username.Text; //assigning user inputs to user object properties
             u1.password = tbox_password.Text;
             u1.email = tbox_email.Text;
@@ -85,9 +88,9 @@ namespace the_forsty_cone
 
             Database db1 = new Database(); //creating database object to call method
             db1.addnewuser(u1); //calling method to add new user to database
-        }
 
-        //      }
+
+        }
 
         private void Registration_form_Load(object sender, EventArgs e)
         {

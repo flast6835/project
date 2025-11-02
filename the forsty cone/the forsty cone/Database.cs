@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿
+using Microsoft.Data.SqlClient;
 using Microsoft.Identity.Client;
 using Microsoft.VisualBasic.ApplicationServices;
 using System;
@@ -84,24 +85,22 @@ namespace the_forsty_cone
             }
         }
 
-     
 
 
-        public void addproducts(Products product2)
+
+        public void addproducts(Products product2) //this method adds a new product to the database
         {
-            //creates a connection to the database
-          //  string stringconnction = "Data Source=ZAK-PC;Initial Catalog='the frosty cone';Integrated Security=True;TrustServerCertificate=True"; 
 
-            string insertQuery = "INSERT INTO Products (Product_name, Product_price, Product_image) VALUES (@name, @price,@img)"; 
+            string insertQuery = "INSERT INTO Products (Product_name, Product_price, Product_image) VALUES (@name, @price,@img)"; // SQL query to insert a new product
 
-            using (SqlConnection con = new SqlConnection(this.stringconnction))
+            using (SqlConnection con = new SqlConnection(this.stringconnction)) //creates a connection to the database
             {
 
                 try //checks for errors
                 {
                     con.Open();
                     //adds into database
-                    using (SqlCommand cmd = new SqlCommand(insertQuery, con)) 
+                    using (SqlCommand cmd = new SqlCommand(insertQuery, con))
                     {
                         cmd.Parameters.AddWithValue("@name", product2.ProductName); //this line adds the product name to the SQL command
                         cmd.Parameters.AddWithValue("@price", product2.ProductPrice);
@@ -110,9 +109,9 @@ namespace the_forsty_cone
 
 
 
-                        cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery(); //executes the SQL command to insert the new product
 
-                        MessageBox.Show("Register successfully", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Added Successfully", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
                     }
@@ -123,38 +122,41 @@ namespace the_forsty_cone
                 {
                     MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                con.Close(); 
+                con.Close();
 
             }
         }
 
-        public bool loginuser(string username, string password)
+        public bool loginuser(string username, string password) //this method handles user login
         {
             try
             {
-                string query = @"SELECT id, username, isadmin 
+                string query = @"SELECT id, username, isadmin, password 
                                  FROM users 
-                                 WHERE UPPER(username)=UPPER(@username) 
-                                 AND [password]=@password";
+                                 WHERE UPPER(username)=UPPER(@username)"; // SQL query to select user details based on username
 
-                using (SqlConnection con = new SqlConnection(stringconnction))
+                using (SqlConnection con = new SqlConnection(stringconnction)) //creates a connection to the database
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con)) //creates a SQL command
                     {
-                        cmd.Parameters.AddWithValue("@username", username ?? string.Empty);
-                        cmd.Parameters.AddWithValue("@password", password ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@username", username ?? string.Empty); //adds the username parameter to the SQL command
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader()) //executes the SQL command and reads the results
                         {
-                            if (reader.Read())
+                            if (reader.Read()) //checks if a user record was found
                             {
-                                Session.Instance.UserId = reader.GetInt32(0);
-                                Session.Instance.Username = reader.GetString(1);
-                                Session.Instance.IsAdmin = reader.GetInt32(0);
+                                string hashedPassword = reader.GetString(3); //retrieves the hashed password from the database
+                                if (PasswordHasher.VerifyPassword(password, hashedPassword)) //verifies the provided password against the hashed password
+                                {
+                                    // If password is correct, set session details
+                                    Session.Instance.UserId = reader.GetInt32(0);
+                                    Session.Instance.Username = reader.GetString(1);
+                                    Session.Instance.IsAdmin = reader.GetInt32(2);
 
-                                MessageBox.Show("Login successful", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return true;
+                                    MessageBox.Show("Login successful", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -171,40 +173,24 @@ namespace the_forsty_cone
         }
 
 
-
-
-
-
-
-
-
-
-
-    
-        
-
-
-
-
-
-
-        public List<Products> getallProducts()
+        public List<Products> getallProducts() //this method retrieves all products from the database
         {
-            string query3 = "SELECT Product_id, Product_name, product_price, Product_image FROM Products";
+            string query3 = "SELECT Product_id, Product_name, product_price, Product_image FROM Products"; //SQL query to select product details
 
-            List<Products> products_list = new List<Products>();
+            List<Products> products_list = new List<Products>(); //list to store the retrieved products
 
-            using (SqlConnection con = new SqlConnection(stringconnction))
+            using (SqlConnection con = new SqlConnection(stringconnction)) //creates a connection to the database
             {
                 con.Open();
 
-                using (SqlCommand cmd = new SqlCommand(query3, con))
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(query3, con)) //creates a SQL command
+                using (SqlDataReader reader = cmd.ExecuteReader()) //executes the SQL command and reads the results
                 {
+                    //iterates through each product record
                     while (reader.Read())
                     {
-                        int id1 = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
-                        string name1 = reader.IsDBNull(1) ? string.Empty : reader.GetString(1);
+                        int id1 = reader.IsDBNull(0) ? 0 : reader.GetInt32(0); // Handle ID safely
+                        string name1 = reader.IsDBNull(1) ? string.Empty : reader.GetString(1);// Handle name safely
 
                         // Handle price safely (assuming INT in DB)
                         int price1 = 0;
@@ -212,10 +198,10 @@ namespace the_forsty_cone
                         {
                             // if it's int in DB
                             price1 = reader.GetInt32(2);
-                            
+
                         }
 
-                        
+
 
                         // Handle image safely
                         string image1 = reader.IsDBNull(3) ? string.Empty : reader["Product_image"].ToString();
@@ -264,16 +250,17 @@ namespace the_forsty_cone
         }
 
 
-        public void RemoveFromBasket(int a,int b) 
+        public void RemoveFromBasket(int a, int b) // method removes a product from the user's basket
         {
-            string deleteQuery = "DELETE FROM Basket WHERE id= @u_id  and  Product_id = @p_id";
-            using (SqlConnection con = new SqlConnection(this.stringconnction))
+            string deleteQuery = "DELETE FROM Basket WHERE Productid = @p_id and  userid= @u_id "; // SQL query to delete a product from the basket
+            using (SqlConnection con = new SqlConnection(this.stringconnction)) //creates a connection to the database
             {
                 try
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, con)) //creates a SQL command
                     {
+                        //adds the product ID and user ID parameters to the SQL command
                         cmd.Parameters.AddWithValue("p_id", a);
                         cmd.Parameters.AddWithValue("u_id", b);
 
@@ -282,7 +269,7 @@ namespace the_forsty_cone
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception ex) //catches any exceptions that occur during the process
                 {
                     MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -291,27 +278,28 @@ namespace the_forsty_cone
             }
         }
 
-        public void AddToBasket(int a, int b)
+        public void AddToBasket(int a, int b) // method adds a product to the user's basket
         {
-            string ADDQuery = "INSERT INTO Basket WHERE id= @u_id and Product_id = @p_id";
-            using (SqlConnection con = new SqlConnection(this.stringconnction))
+            string ADDQuery = "INSERT INTO Basket WHERE id= @u_id and Product_id = @p_id"; // SQL query to insert a product into the basket
+            using (SqlConnection con = new SqlConnection(this.stringconnction)) //creates a connection to the database
             {
                 try
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(ADDQuery, con))
+                    using (SqlCommand cmd = new SqlCommand(ADDQuery, con)) //creates a SQL command
                     {
+                        //adds the user ID parameter to the SQL command
                         cmd.Parameters.AddWithValue("u_id", a);
                         cmd.Parameters.AddWithValue("u_id", b);
-                        
+
                         cmd.ExecuteNonQuery();
 
-                     
+
 
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception ex) //catches any exceptions that occur during the process
                 {
                     MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -320,50 +308,55 @@ namespace the_forsty_cone
             }
         }
 
-        public void AddToUsers(int a, string b, int c)
+        public List<(int id, string username, int isAdmin)> GetAllUsers() //method retrieves all users from the database
         {
-            string ADDQuery2 = "SELECT id, username, isadmin FROM users";
+            var users = new List<(int id, string username, int isAdmin)>(); //list to store user details
+            string query = "SELECT id, username, isadmin FROM users"; // SQL query to select user details
 
-
-            using (SqlConnection con = new SqlConnection(this.stringconnction))
+            using (SqlConnection con = new SqlConnection(this.stringconnction)) //creates a connection to the database
             {
                 try
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(ADDQuery2, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con)) //creates a SQL command
                     {
-                        cmd.Parameters.AddWithValue("u_id", a);
-                        cmd.Parameters.AddWithValue("u_username", b);
-                        cmd.Parameters.AddWithValue("u_isadmin", c);
+                        using (SqlDataReader reader = cmd.ExecuteReader()) //executes the SQL command and reads the results
+                        {
+                            while (reader.Read()) //iterates through each user record
 
-                        cmd.ExecuteNonQuery();
-
+                            {
+                                //adds the user details to the list
+                                users.Add((
+                                    reader.GetInt32(0),
+                                    reader.GetString(1),
+                                    reader.GetInt32(2)
+                                ));
+                            }
+                        }
                     }
                 }
-
-                catch (Exception ex)
+                catch (Exception ex) //catches any exceptions that occur during the process
                 {
                     MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                con.Close();
-
             }
+            return users;
         }
 
 
-        bool checkEmailExist(string email)
+        bool checkEmailExist(string email) //this method checks if an email exists in the database
         {
-            string query = "select count(*) from users where email=@email";
+            string query = "select count(*) from users where email=@email"; // SQL query to count records with the specified email
             int count = 0;
-            using (SqlConnection con = new SqlConnection(this.stringconnction))
+            using (SqlConnection con = new SqlConnection(this.stringconnction)) //creates a connection to the database
             {
                 try
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con)) //creates a SQL command
                     {
-                        cmd.Parameters.AddWithValue("@email", email);
-                        count = (int)cmd.ExecuteScalar();
+                        cmd.Parameters.AddWithValue("@email", email); //adds the email parameter to the SQL command
+                        count = (int)cmd.ExecuteScalar(); //executes the SQL command and retrieves the count of matching records
                     }
                 }
                 catch (Exception ex)
@@ -372,7 +365,7 @@ namespace the_forsty_cone
                 }
                 con.Close();
             }
-            if (count > 0)
+            if (count > 0) //checks if any matching records were found
             {
                 return true;
             }
@@ -383,36 +376,33 @@ namespace the_forsty_cone
         }
 
 
-        public bool VerifyUserForReset(string email, string username, string dob)
+        public bool VerifyUserForReset(string email, string username, string dob) //this method verifies user details for password reset
         {
-            if (!checkEmailExist(email))
+            if (!checkEmailExist(email)) //checks if the email exists in the database
             {
-                return false;
+                return false; 
             }
 
             try
             {
-                string query = @"SELECT COUNT(*) 
-                               FROM users 
-                               WHERE UPPER(email)=UPPER(@email) 
-                               AND UPPER(username)=UPPER(@username) 
-                               AND dob=@dob";
+                string query = @"SELECT COUNT(*)  FROM users WHERE UPPER(email)=UPPER(@email) AND UPPER(username)=UPPER(@username) AND dob=@dob"; // SQL query to count matching user records
 
-                using (SqlConnection con = new SqlConnection(stringconnction))
+                using (SqlConnection con = new SqlConnection(stringconnction)) //creates a connection to the database
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (SqlCommand cmd = new SqlCommand(query, con)) //creates a SQL command
                     {
+                        //adds parameters to the SQL command
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@username", username);
                         cmd.Parameters.AddWithValue("@dob", dob);
 
-                        int count = (int)cmd.ExecuteScalar();
-                        return count > 0;
+                        int count = (int)cmd.ExecuteScalar(); //executes the SQL command and retrieves the count of matching records
+                        return count > 0; //returns true if a matching record is found, otherwise false
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) //catches any exceptions that occur during the process
             {
                 MessageBox.Show("Error verifying user: " + ex.Message,
                     "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -422,23 +412,21 @@ namespace the_forsty_cone
 
 
 
-        public bool UpdatePassword(string email, string newPassword)
+        public bool UpdatePassword(string email, string newPassword) //this method updates the user's password in the database
         {
             try
             {
                 // Hash the new password
-                //string hashedPassword = PasswordHasher.HashPassword(newPassword);
-                string hashedPassword= newPassword; // Replace with actual hashing
+                string hashedPassword = PasswordHasher.HashPassword(newPassword);
 
-                string updateQuery = @"UPDATE users 
-                                     SET [password] = @password 
-                                     WHERE email = @email";
+                string updateQuery = @"UPDATE users SET [password] = @password WHERE email = @email"; // SQL query to update the password
 
-                using (SqlConnection con = new SqlConnection(stringconnction))
+                using (SqlConnection con = new SqlConnection(stringconnction)) //creates a connection to the database
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con)) //creates a SQL command
                     {
+                        //adds parameters to the SQL command
                         cmd.Parameters.AddWithValue("@password", hashedPassword);
                         cmd.Parameters.AddWithValue("@email", email);
 
@@ -447,7 +435,7 @@ namespace the_forsty_cone
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) //catches any exceptions that occur during the process
             {
                 MessageBox.Show("Error updating password: " + ex.Message,
                     "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -525,7 +513,7 @@ namespace the_forsty_cone
                     {
                         cmd.Parameters.AddWithValue("u_id", id);
                         cmd.Parameters.AddWithValue("u_isadmin", isadmin);
-                        cmd.Parameters.AddWithValue("@isadmin", 1); 
+                        cmd.Parameters.AddWithValue("@isadmin", 1);
                         cmd.ExecuteNonQuery();
 
                     }

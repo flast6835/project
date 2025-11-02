@@ -27,8 +27,8 @@ namespace the_forsty_cone
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Database d1 = new Database();
-            Users u1 = new Users();
+            Database d1 = new Database(); //create instance of database class to access its methods
+            Users u1 = new Users(); //create instance of users class to access its methods
 
             if (string.IsNullOrWhiteSpace(tbx_username.Text) || string.IsNullOrWhiteSpace(tbx_dob.Text) || string.IsNullOrWhiteSpace(tbx_email.Text)) //this checks if either field is empty
             {
@@ -37,18 +37,18 @@ namespace the_forsty_cone
                 return;//exit the method early
             }
 
-            if (u1.Checkdt(tbx_dob.Text) == false)
+            if (u1.Checkdt(tbx_dob.Text) == false) //check if date is valid
             {
                 MessageBox.Show("Date of Birth must be in DD-MM-YYYY format.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return; //exit the method early
             }
 
-            if (d1.VerifyUserForReset(tbx_username.Text, tbx_dob.Text, tbx_email.Text) == false)
+            if (d1.VerifyUserForReset(tbx_username.Text, tbx_dob.Text, tbx_email.Text) == false) 
             {
-                Newpwd n1 = new Newpwd(tbx_email.Text);
-                n1.ShowDialog();
+                Newpwd n1 = new Newpwd(tbx_email.Text);//create instance of new password form and pass email to it
+                n1.ShowDialog(); 
 
-                if (n1.Visible == false)
+                if (n1.Visible == false)//check if new password form is closed
                 {
                     this.Close();
                 }

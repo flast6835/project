@@ -39,5 +39,21 @@ namespace the_forsty_cone
         {
 
         }
+
+        private void btn_viewmenu_Click(object sender, EventArgs e)
+        {
+            Menu m1 = new Menu();
+            m1.ShowDialog();
+        }
+
+        private void btn_close_Click(object sender, EventArgs e)
+        {
+            Session.Instance.Clear();
+            this.Hide();
+
+            Login m1 = new Login();
+            m1.ShowDialog();
+            
+        }
     }
 }

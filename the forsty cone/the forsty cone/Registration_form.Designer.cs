@@ -33,7 +33,6 @@ namespace the_forsty_cone
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Registration_form));
-            btn_register = new Button();
             tbox_password = new TextBox();
             tbox_email = new TextBox();
             tbox_confirmpassword = new TextBox();
@@ -41,28 +40,15 @@ namespace the_forsty_cone
             button1 = new Button();
             tbox_DOB = new TextBox();
             pictureBox1 = new PictureBox();
+            btn_register = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
-            // 
-            // btn_register
-            // 
-            btn_register.BackColor = SystemColors.ActiveCaptionText;
-            btn_register.FlatAppearance.BorderSize = 0;
-            btn_register.FlatStyle = FlatStyle.Flat;
-            btn_register.ForeColor = SystemColors.ButtonHighlight;
-            btn_register.Location = new Point(21, 419);
-            btn_register.Name = "btn_register";
-            btn_register.Size = new Size(219, 29);
-            btn_register.TabIndex = 0;
-            btn_register.Text = "Register";
-            btn_register.UseVisualStyleBackColor = false;
-            btn_register.Click += btn_register_Click;
             // 
             // tbox_password
             // 
             tbox_password.BackColor = Color.Gainsboro;
             tbox_password.BorderStyle = BorderStyle.None;
-            tbox_password.Location = new Point(22, 187);
+            tbox_password.Location = new Point(45, 190);
             tbox_password.Name = "tbox_password";
             tbox_password.PasswordChar = '*';
             tbox_password.PlaceholderText = "Password";
@@ -73,7 +59,7 @@ namespace the_forsty_cone
             // 
             tbox_email.BackColor = Color.Gainsboro;
             tbox_email.BorderStyle = BorderStyle.None;
-            tbox_email.Location = new Point(22, 290);
+            tbox_email.Location = new Point(45, 293);
             tbox_email.Name = "tbox_email";
             tbox_email.PlaceholderText = "Email";
             tbox_email.Size = new Size(219, 16);
@@ -83,7 +69,7 @@ namespace the_forsty_cone
             // 
             tbox_confirmpassword.BackColor = Color.Gainsboro;
             tbox_confirmpassword.BorderStyle = BorderStyle.None;
-            tbox_confirmpassword.Location = new Point(22, 238);
+            tbox_confirmpassword.Location = new Point(45, 241);
             tbox_confirmpassword.Name = "tbox_confirmpassword";
             tbox_confirmpassword.PasswordChar = '*';
             tbox_confirmpassword.PlaceholderText = "Confirm Password";
@@ -95,7 +81,7 @@ namespace the_forsty_cone
             // 
             tbox_username.BackColor = Color.Gainsboro;
             tbox_username.BorderStyle = BorderStyle.None;
-            tbox_username.Location = new Point(21, 137);
+            tbox_username.Location = new Point(44, 140);
             tbox_username.Name = "tbox_username";
             tbox_username.PlaceholderText = "Username";
             tbox_username.Size = new Size(220, 16);
@@ -107,7 +93,7 @@ namespace the_forsty_cone
             button1.FlatAppearance.BorderSize = 0;
             button1.FlatStyle = FlatStyle.Flat;
             button1.ForeColor = SystemColors.ButtonHighlight;
-            button1.Location = new Point(39, 469);
+            button1.Location = new Point(62, 472);
             button1.Name = "button1";
             button1.Size = new Size(174, 23);
             button1.TabIndex = 10;
@@ -119,7 +105,7 @@ namespace the_forsty_cone
             // 
             tbox_DOB.BackColor = Color.Gainsboro;
             tbox_DOB.BorderStyle = BorderStyle.None;
-            tbox_DOB.Location = new Point(22, 344);
+            tbox_DOB.Location = new Point(45, 347);
             tbox_DOB.Name = "tbox_DOB";
             tbox_DOB.PlaceholderText = "Date of Birth";
             tbox_DOB.Size = new Size(218, 16);
@@ -128,7 +114,7 @@ namespace the_forsty_cone
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(12, 12);
+            pictureBox1.Location = new Point(35, 15);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(243, 490);
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -136,11 +122,25 @@ namespace the_forsty_cone
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
             // 
+            // btn_register
+            // 
+            btn_register.BackColor = Color.Black;
+            btn_register.FlatAppearance.BorderSize = 0;
+            btn_register.FlatStyle = FlatStyle.Flat;
+            btn_register.ForeColor = SystemColors.ButtonHighlight;
+            btn_register.Location = new Point(41, 421);
+            btn_register.Name = "btn_register";
+            btn_register.Size = new Size(231, 30);
+            btn_register.TabIndex = 0;
+            btn_register.Text = "Register";
+            btn_register.UseVisualStyleBackColor = false;
+            btn_register.Click += btn_register_Click;
+            // 
             // Registration_form
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(258, 504);
+            ClientSize = new Size(1117, 667);
             Controls.Add(tbox_DOB);
             Controls.Add(button1);
             Controls.Add(tbox_confirmpassword);
@@ -158,8 +158,6 @@ namespace the_forsty_cone
         }
 
         #endregion
-
-        private Button btn_register;
         private TextBox tbox_password;
         private TextBox tbox_email;
         private TextBox tbox_confirmpassword;
@@ -167,6 +165,7 @@ namespace the_forsty_cone
         private Button button1;
         private TextBox tbox_DOB;
         private PictureBox pictureBox1;
+        private Button btn_register;
     }
 }
 

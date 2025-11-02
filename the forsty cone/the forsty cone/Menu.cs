@@ -344,7 +344,7 @@
 
 //            ListViewItem selectedItem = listView1.SelectedItems[0];
 
-//            // ⚠️ adapte les index selon tes colonnes
+//      
 //            string name = selectedItem.SubItems[2].Text;
 //            string priceText = selectedItem.SubItems[3].Text.Replace("£", "").Trim();
 
@@ -354,7 +354,7 @@
 //                return;
 //            }
 
-//            // Ajouter dans le panier
+//          
 //            Products p = new Products { ProductName = name, ProductPrice = (int)price };
 //            box.Add(p);
 
@@ -422,7 +422,7 @@ namespace the_forsty_cone
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 // Clear session on form close
-                Session.Instance.Clear();
+                //Session.Instance.Clear();
             }
         }
 
@@ -518,18 +518,18 @@ namespace the_forsty_cone
             loadproducts();
         }
 
-        private void EditProduct_Click(object sender, EventArgs e)
+        private void EditProduct_Click(object sender, EventArgs e) //this is for admin to edit products
         {
-            if (listView1.SelectedItems.Count > 0)
+            if (listView1.SelectedItems.Count > 0) // Check if an item is selected
             {
-                ListViewItem selected = listView1.SelectedItems[0];
+                ListViewItem selected = listView1.SelectedItems[0]; // Get the selected item
                 int productId = int.Parse(selected.SubItems[0].Text);
                 string productName = selected.SubItems[1].Text;
                 int productPrice = int.Parse(selected.SubItems[2].Text);
 
                 // Open edit form
-                var addProductForm = new Addproducts();
-                addProductForm.SetEditMode(productId, productName, productPrice);
+                var addProductForm = new Addproducts(); // Create instance of Addproducts form
+                addProductForm.SetEditMode(productId, productName, productPrice); // Set form to edit mode
                 if (addProductForm.ShowDialog() == DialogResult.OK)
                 {
                     loadproducts(); // Refresh the list
@@ -537,16 +537,16 @@ namespace the_forsty_cone
             }
         }
 
-        private void DeleteProduct_Click(object sender, EventArgs e)
+        private void DeleteProduct_Click(object sender, EventArgs e) //this is for admin to delete products
         {
-            if (listView1.SelectedItems.Count > 0)
+            if (listView1.SelectedItems.Count > 0) // Check if an item is selected
             {
                 if (MessageBox.Show("Are you sure you want to delete this product?", "Confirm Delete",
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    ListViewItem selected = listView1.SelectedItems[0];
-                    int productId = int.Parse(selected.SubItems[0].Text);
-                    db.deleteproducts(productId);
+                    ListViewItem selected = listView1.SelectedItems[0]; // Get the selected item
+                    int productId = int.Parse(selected.SubItems[0].Text); // Get Product ID
+                    db.deleteproducts(productId); // Delete product from database
                     loadproducts(); // Refresh the list
                 }
             }
@@ -610,26 +610,27 @@ namespace the_forsty_cone
             Database db = new Database();
             List<Products> products = db.getallProducts();
 
-            int imageIndex = 0;
+            int imageIndex = 0; // Index for images in ImageList
 
-            foreach (Products product in products)
+            foreach (Products product in products) // Iterate through each product
             {
                 try
                 {
                     // Clean the path - remove quotes and trim
-                    string cleanPath = CleanImagePath(product.imageurl);
+                    string cleanPath = CleanImagePath(product.imageurl); // Clean the image path to make it usable
+                                                                         //      MessageBox.Show($"Trying to load: {cleanPath}"); //debugging
+                                                                         //    MessageBox.Show($"File exists: {File.Exists(cleanPath)}"); //check if file exists
 
-                    Console.WriteLine($"Trying to load: {cleanPath}");
-                    Console.WriteLine($"File exists: {File.Exists(cleanPath)}");
 
-                    if (File.Exists(cleanPath))
+                    if (File.Exists(cleanPath)) // Check if file exists
                     {
-                        Image productImage = LoadImage(cleanPath);
-                        if (productImage != null)
+                        Image productImage = LoadImage(cleanPath); // Load the image
+                        if (productImage != null)// If image loaded successfully
                         {
-                            imageList.Images.Add(productImage);
+                            imageList.Images.Add(productImage); // Add image to ImageList
 
-                            ListViewItem item = new ListViewItem("", imageIndex);
+                            ListViewItem item = new ListViewItem("", imageIndex); // Create ListViewItem with image
+                            //add subitems
                             item.SubItems.Add(product.ProductId.ToString());
                             item.SubItems.Add(product.ProductName);
                             item.SubItems.Add(product.ProductPrice.ToString("C"));
@@ -638,8 +639,9 @@ namespace the_forsty_cone
 
                             listView1.Items.Add(item);
 
-                            imageIndex++;
-                            Console.WriteLine($"Successfully loaded image for {product.ProductName}");
+                            imageIndex++; // Increment image index
+                                          //      MessageBox.Show($"Successfully loaded image for {product.ProductName}"); 
+
                         }
                         else
                         {
@@ -654,32 +656,38 @@ namespace the_forsty_cone
                 catch (Exception ex)
                 {
                     AddItemWithoutImage(product, $"Error: {ex.Message}");
-                    Console.WriteLine($"Error: {ex.Message}");
+                    //  MessageBox.Show($"Error: {ex.Message}");
+
                 }
             }
         }
 
-        private string CleanImagePath(string path)
+        private string CleanImagePath(string path) // Clean the image path to make it usable
         {
-            if (string.IsNullOrEmpty(path)) return path;
+            if (string.IsNullOrEmpty(path)) // Check for null or empty
 
-            // Remove quotes and trim
+                return path; // Return as it is
+
+            // If not null or empty
+
+            // Remove quotes and trim it
             string cleanPath = path.Replace("\"", "").Trim();
 
             // Fix path separators if needed
             cleanPath = cleanPath.Replace('/', '\\');
 
-            return cleanPath;
+            return cleanPath; // Return cleaned path
+
         }
 
-        private Image LoadImage(string filePath)
+        private Image LoadImage(string filePath) // Load image from file
         {
             try
             {
                 // For .webp files, we might need special handling
                 string extension = Path.GetExtension(filePath).ToLower();
 
-                if (extension == ".webp")
+                if (extension == ".webp") // If file is .webp
                 {
                     // Try using Image.FromFile first
                     try
@@ -701,13 +709,13 @@ namespace the_forsty_cone
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading image {filePath}: {ex.Message}");
-                return null;
+                return null; // Return null if error occurs
             }
         }
 
-        private Image HandleWebPImage(string filePath)
+        private Image HandleWebPImage(string filePath) // Handle .webp images
         {
-            // Option 1: Use a placeholder image for .webp files
+            // Use a placeholder image for .webp files
             try
             {
                 // Create a simple placeholder bitmap
@@ -729,9 +737,9 @@ namespace the_forsty_cone
         }
 
 
-        private void AddItemWithoutImage(Products product, string status)
+        private void AddItemWithoutImage(Products product, string status) // Add item without image
         {
-            ListViewItem item = new ListViewItem(status);
+            ListViewItem item = new ListViewItem(status); // Create ListViewItem with status
             item.SubItems.Add(product.ProductId.ToString());
             item.SubItems.Add(product.ProductName);
             item.SubItems.Add(product.ProductPrice.ToString("C"));
@@ -746,7 +754,7 @@ namespace the_forsty_cone
         {
 
 
-            if (listView1.SelectedItems.Count > 0)
+            if (listView1.SelectedItems.Count > 0) //this checks if any item is selected
             {
 
 
@@ -860,6 +868,15 @@ namespace the_forsty_cone
         private void btn_remove_Click(object sender, EventArgs e)
         {
             RemoveFromBasket_Click(sender, e);
+        }
+
+        private void btn_close_Click(object sender, EventArgs e)
+        {
+            Session.Instance.Clear();
+            this.Hide();
+
+            Login m1 = new Login();
+            m1.ShowDialog();
         }
     }
 }
